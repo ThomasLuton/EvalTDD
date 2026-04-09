@@ -33,61 +33,14 @@ describe("CalculatePriceUseCase", () => {
         expect(result).toBe(10);
     });
 
-    // test("For two products", () => {
-    //     expect(
-    //         calculatePrice.execute([
-    //             {
-    //                 price: 1,
-    //                 name: "product1",
-    //                 quantity: 1,
-    //             },
-
-    //             {
-    //                 price: 1,
-    //                 name: "product2",
-    //                 quantity: 1,
-    //             },
-    //         ]),
-    //     ).toBe(2);
-    // });
-
-    // test("For two products with quantity", () => {
-    //     expect(
-    //         calculatePrice.execute([
-    //             {
-    //                 price: 1,
-    //                 name: "product1",
-    //                 quantity: 1,
-    //             },
-
-    //             {
-    //                 price: 1,
-    //                 name: "product2",
-    //                 quantity: 2,
-    //             },
-    //         ]),
-    //     ).toBe(3);
-    // });
-
-    // test("For one production with price reduction", () => {
-    //     // Given
-    //     reductionGateway.reduction = {
-    //         type: "PRICE_REDUCTION",
-    //         amount: 10,
-    //     };
-    //     // When
-    //     // Then
-    //     expect(
-    //         calculatePrice.execute(
-    //             [
-    //                 {
-    //                     price: 10,
-    //                     name: "product1",
-    //                     quantity: 1,
-    //                 },
-    //             ],
-    //             "code10",
-    //         ),
-    //     ).toBe(5);
-    // });
+    test("For one product with direct reduction and a final price < 1", async () => {
+        const result = await calculatePrice.execute([
+            {
+                price: 5,
+                name: "product1",
+                quantity: 1,
+            },
+        ])
+        expect(result).toBe(1)
+    })
 });
