@@ -37,6 +37,7 @@ export class CalculatePriceUseCase {
         if (price < 1) {
           price = 1
         }
+        break;
       }
     }
     return price;

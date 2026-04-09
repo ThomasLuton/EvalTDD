@@ -2,15 +2,20 @@ import { beforeEach, describe, expect, test } from "vitest";
 import { CalculatePriceUseCase, ReductionGateway } from "./calcul-price.usecase";
 
 class StubReductionGateway implements ReductionGateway {
-    reduction = {
-        type: "DIRECT_REDUCTION",
-        amount: 10
-    };
     async getReductionByCode(code: string | undefined): Promise<{
         type: string;
         amount: number;
     }> {
-        return this.reduction;
+        if (code === "percentile") {
+            return {
+                type: "PERCENTILE_REDUCTION",
+                amount: 10
+            }
+        }
+        return {
+            type: "DIRECT_REDUCTION",
+            amount: 10
+        };
     }
 }
 
@@ -58,5 +63,16 @@ describe("CalculatePriceUseCase", () => {
             }
         ])
         expect(result).toBe(20)
+    })
+
+    test("For one product with percentile reduction", async () => {
+        const result = await calculatePrice.execute([
+            {
+                price: 20,
+                name: "product1",
+                quantity: 1,
+            },
+        ], "percentile")
+        expect(result).toBe(18);
     })
 });
