@@ -34,6 +34,9 @@ export class CalculatePriceUseCase {
     switch (reduction.type) {
       case 'DIRECT_REDUCTION': {
         price = price - reduction.amount;
+        if (price < 1) {
+          price = 1
+        }
       }
     }
     return price;
