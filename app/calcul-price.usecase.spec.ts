@@ -38,6 +38,17 @@ describe("CalculatePriceUseCase", () => {
         expect(result).toBe(10);
     });
 
+    test("For one product with quantity > 1", async () => {
+        const result = await calculatePrice.execute([
+            {
+                price: 20,
+                name: "product1",
+                quantity: 3,
+            },
+        ])
+        expect(result).toBe(30);
+    })
+
     test("For one product with direct reduction and a final price < 1", async () => {
         const result = await calculatePrice.execute([
             {
