@@ -1,15 +1,12 @@
 import { beforeEach, describe, expect, test } from "vitest";
-import { CalculatePriceUseCase, ReductionGateway } from "./calcul-price.usecase";
+import { CalculatePriceUseCase, Discount, ReductionGateway } from "./calcul-price.usecase";
 
 class StubReductionGateway implements ReductionGateway {
-    async getReductionByCode(code: string | undefined): Promise<{
-        type: string;
-        amount: number;
-    }> {
+    async getReductionByCode(code: string | undefined): Promise<Discount> {
         if (code === "percentile") {
             return {
                 type: "PERCENTILE_REDUCTION",
-                amount: 10
+                amount: 90
             }
         }
         if (code === "2for1") {
@@ -43,7 +40,7 @@ describe("CalculatePriceUseCase", () => {
                 name: "product1",
                 quantity: 1,
             },
-        ], "direct")
+        ], ["direct"])
         expect(result).toBe(10);
     });
 
@@ -54,7 +51,7 @@ describe("CalculatePriceUseCase", () => {
                 name: "product1",
                 quantity: 3,
             },
-        ], "direct")
+        ], ["direct"])
         expect(result).toBe(30);
     })
 
@@ -65,7 +62,7 @@ describe("CalculatePriceUseCase", () => {
                 name: "product1",
                 quantity: 1,
             },
-        ], "direct")
+        ], ["direct"])
         expect(result).toBe(1)
     })
 
@@ -81,7 +78,7 @@ describe("CalculatePriceUseCase", () => {
                 name: "product1",
                 quantity: 1,
             }
-        ], "direct")
+        ], ["direct"])
         expect(result).toBe(20)
     })
 
@@ -92,18 +89,18 @@ describe("CalculatePriceUseCase", () => {
                 name: "product1",
                 quantity: 1,
             },
-        ], "percentile")
-        expect(result).toBe(18);
+        ], ["percentile"])
+        expect(result).toBe(2);
     })
 
     test("For one product with percentile reduction and a final price < 1", async () => {
         const result = await calculatePrice.execute([
             {
-                price: 1,
+                price: 10,
                 name: "product1",
                 quantity: 1,
             },
-        ], "percentile")
+        ], ["percentile"])
         expect(result).toBe(1);
     })
 
@@ -119,8 +116,8 @@ describe("CalculatePriceUseCase", () => {
                 name: "product1",
                 quantity: 1,
             }
-        ], 'percentile')
-        expect(result).toBe(36)
+        ], ['percentile'])
+        expect(result).toBe(4)
     })
     test("For one product with 2 for 1 reduction", async () => {
         const result = await calculatePrice.execute([
@@ -129,7 +126,7 @@ describe("CalculatePriceUseCase", () => {
                 name: "product1",
                 quantity: 2,
             },
-        ], "2for1")
+        ], ["2for1"])
         expect(result).toBe(10);
     })
     test("For one product with 2 for 1 reduction", async () => {
@@ -139,7 +136,7 @@ describe("CalculatePriceUseCase", () => {
                 name: "product1",
                 quantity: 3,
             },
-        ], "2for1")
+        ], ["2for1"])
         expect(result).toBe(20);
     })
     test("For one product with no reduction", async () => {
@@ -156,11 +153,11 @@ describe("CalculatePriceUseCase", () => {
     test("For one product with several reduction", async () => {
         const result = await calculatePrice.execute([
             {
-                price: 20,
+                price: 200,
                 name: "product1",
                 quantity: 1,
             },
-        ], ["direct", "percentile"])
-        expect(result).toBe(9);
+        ], ["percentile", "direct"])
+        expect(result).toBe(10);
     })
 });
