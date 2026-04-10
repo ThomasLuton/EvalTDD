@@ -16,12 +16,14 @@ export class CalculatePriceUseCase {
 
   async execute(
     product: { price: number; name: string; quantity: number }[],
-    code?: string,
+    code?: string[],
   ) {
-    const reduction = await this.reductionGateway.getReductionByCode(code);
+    code?.forEach(async (c) => {
+      const reduction = await this.reductionGateway.getReductionByCode(c);
 
-    product.forEach((p) => {
-      p = this.applyReduction(reduction, p);
+      product.forEach((p) => {
+        p = this.applyReduction(reduction, p);
+      })
     })
 
     return product.reduce(
