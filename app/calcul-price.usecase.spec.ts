@@ -18,10 +18,13 @@ class StubReductionGateway implements ReductionGateway {
                 amount: 0
             }
         }
-        return {
-            type: "DIRECT_REDUCTION",
-            amount: 10
-        };
+        if (code === "direct") {
+            return {
+                type: "DIRECT_REDUCTION",
+                amount: 10
+            };
+        }
+        return { type: "NONE", amount: 0 };
     }
 }
 
@@ -40,7 +43,7 @@ describe("CalculatePriceUseCase", () => {
                 name: "product1",
                 quantity: 1,
             },
-        ])
+        ], "direct")
         expect(result).toBe(10);
     });
 
@@ -51,7 +54,7 @@ describe("CalculatePriceUseCase", () => {
                 name: "product1",
                 quantity: 3,
             },
-        ])
+        ], "direct")
         expect(result).toBe(30);
     })
 
@@ -62,7 +65,7 @@ describe("CalculatePriceUseCase", () => {
                 name: "product1",
                 quantity: 1,
             },
-        ])
+        ], "direct")
         expect(result).toBe(1)
     })
 
@@ -78,7 +81,7 @@ describe("CalculatePriceUseCase", () => {
                 name: "product1",
                 quantity: 1,
             }
-        ])
+        ], "direct")
         expect(result).toBe(20)
     })
 
@@ -138,5 +141,15 @@ describe("CalculatePriceUseCase", () => {
             },
         ], "2for1")
         expect(result).toBe(20);
+    })
+    test("For one product with no reduction", async () => {
+        const result = await calculatePrice.execute([
+            {
+                price: 10,
+                name: "product1",
+                quantity: 3,
+            },
+        ])
+        expect(result).toBe(30);
     })
 });
