@@ -152,4 +152,15 @@ describe("CalculatePriceUseCase", () => {
         ])
         expect(result).toBe(30);
     })
+
+    test("For one product with several reduction", async () => {
+        const result = await calculatePrice.execute([
+            {
+                price: 20,
+                name: "product1",
+                quantity: 1,
+            },
+        ], ["direct", "percentile"])
+        expect(result).toBe(9);
+    })
 });
