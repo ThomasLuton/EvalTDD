@@ -35,7 +35,6 @@ export class CalculatePriceUseCase {
   }
 
   private applyReduction(reduction: Discount[], product: Product): any {
-    console.error(reduction)
     reduction.forEach(r => {
       switch (r.type) {
         case 'DIRECT_REDUCTION': {
